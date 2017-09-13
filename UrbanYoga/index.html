@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>
+Urban Yoga
+</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="js/angular1.4.min.js"></script>
+
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src = "js/zingchart.min.js"></script>  
+<script src = "js/zingchart-angularjs.js"></script>
+<script src = "JsonExamController.js"></script>
+
+<script type="text/javascript">
+$('document').ready(function() {
+$('.active').parent('li').toggleClass('active');
+$('#submenu').show();
+$('.collapse').on('shown.bs.collapse', function (e) {
+  $('.collapse').not(this).removeClass('in');
+  $('#submenu').show();
+});
+
+$('[data-toggle=collapse]').click(function (e) {
+  $('[data-toggle=collapse]').parent('li').removeClass('active');
+  $(this).parent('li').toggleClass('active');
+});
+});
+
+</script>
+<style type="text/css">
+.navbar {
+	margin-bottom:-1px;
+    border-radius:0;
+}
+
+#submenu {
+    background-color: #ffffff;
+    margin-bottom:20px;
+	display:none;
+}
+
+.collapsing {
+	display:none;
+}
+.salesHead{
+margin-top:100px;
+color:gray;
+cursor:pointer;
+}
+.borderCls{
+border-color:#cccccc
+}
+.activeSub{
+font-weight:bold;
+}
+.btnCls{
+background-color:#a4c38a;
+color:white;
+font-size:16px;
+
+}
+
+</style>
+</head>
+<body ng-app="uyApp">
+	<div ng-controller="uyAppController">
+	   
+		
+		    <div class="container well" ng-init="showDetails=false" style="background-color:#ecf5f1">
+			  <div class="row">
+				<div class="col-sm-3"><img src="logo.jpg" style="margin-top:-18px;"></div>
+				<div class="col-sm-9">
+				  <nav class="navbar navbar-default nav nav-tabs" role="navigation" id="topmenu">
+					<ul class="nav navbar-nav">
+					  <li class="dropdown">
+						<a href="#" data-toggle="collapse" data-target="#Dashboard" class="active borderCls">Dashboard</a>
+					  </li>
+					  <li class="dropdown">
+						<a href="#" data-toggle="collapse" data-target="#Signin" class="borderCls">Sign In</a>
+					  </li>
+					  <li class="dropdown">
+						<a href="#" data-toggle="collapse" data-target="#Classes" class="borderCls">Classes</a>
+					  </li>
+					  <li class="dropdown">
+						<a href="#" data-toggle="collapse" data-target="#Workshops" class="borderCls">Workshops</a>
+					  </li>
+					  <li class="dropdown">
+						<a href="#" data-toggle="collapse" data-target="#Appointments" class="borderCls">Appointments</a>
+					  </li>
+					  <li class="dropdown">
+						<a href="#" data-toggle="collapse" data-target="#Clienthome" class="borderCls">Client Home</a>
+					  </li>
+					  <li class="dropdown">
+						<a href="#" data-toggle="collapse" data-target="#Retail" class="borderCls">Retail</a>
+					  </li>
+					</ul>
+				  </nav>
+				  </div>
+				</div>
+			  <nav class="navbar navbar-default" role="navigation" id="submenu">
+				<ul class="nav navbar-nav" id="Dashboard">
+				  <li><a href="#" >Dashboard</a></li>
+				  <li><a href="#" class="activeSub">Business Overview</a></li>
+				  <li><a href="#" id="">Schedule</a></li>
+				  <li><a href="#" id="">Reports</a></li>
+				</ul>
+			  </nav>
+			</div>
+		
+		<div class="container well">
+		  
+		  
+		  <div class="row">
+		    <div class="col-sm-1">
+			 <div>
+				<a href="#">
+				<span class="glyphicon glyphicon-plus btn btn-default btnCls"></span><br>
+				<small>New Program</small>
+				</a>
+			</div>
+			</div>
+			<div class="col-sm-11">
+			  <div class="row">
+						<div class="col-sm-4" ng-repeat="user in newArray">					  
+							<div class="well" style="background:#fff">
+								<div class="row" >
+									<div class="col-sm-10"><strong>{{user.Name}}</strong></div>
+									<div class="col-sm-2">
+										<a href="#">
+										<span class="glyphicon glyphicon-pencil btn btn-default" style="margin-left:-5px;"></span>
+										</a>
+									</div>
+								</div>
+								<div>
+									<span class="salesHead"><small>Sales by Month</small></span>							
+									<zingchart  class="chart-1" zc-values="[user.Sales.CurrentYear,user.Sales.PreviousYear]" zc-height="250" zc-width="300" zc-type="bar"></zingchart>
+									<div class="row" style="background-color:#eee;padding:6px">
+										<div class="col-sm-5"><small>Total Monthly<br/> Sales</small></div>
+										<div class="col-sm-4"><small>Current </small><br/> {{user.total | currency}}</div>
+										<div class="col-sm-3"><small>1-Year </small><br/>
+											<zingchart  class="chart-1" zc-values="[user.Sales.CurrentYear,user.Sales.PreviousYear]" zc-height="50" zc-width="65" zc-type="line"></zingchart>
+										</div>
+									</div>								
+									<span ng-click="showDetails=true" ng-show="showDetails==false" class="salesHead"><small>more</small></span>
+									<table  style="line-height:25px;" ng-if="showDetails">
+										<tr>
+											<th><small> Price Name</small></th>
+											<th><small> Current  &nbsp;</small></th>
+											<th><small> &nbsp; 1-Year</small></th>
+										</tr>
+										<tr ng-repeat="sale in sales">
+											<td ng-if="user.ProgramID==sale.ProgramID">{{sale.Name}}</td>
+											<td ng-if="user.ProgramID==sale.ProgramID">{{sale.Sales | currency}}</td>
+											<td ng-if="user.ProgramID==sale.ProgramID">
+											
+											  <zingchart  class="chart-1" zc-values="[sale.Sales,user.Sales.CurrentYear[$index]]" zc-height="50" zc-width="100" zc-type="line"></zingchart>
+											</td>
+										</tr>
+									</table>							
+									<span ng-click="showDetails=!showDetails" ng-show="showDetails==true" class="salesHead"><small>less</small></span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-6">
+							<table class="table">
+								  <thead>
+									<tr>
+									  <th class="salesHead"><small>All Programs</small></th>
+									  <th class="salesHead"><small>Monthly Sale</small></th>
+									  <th class="salesHead"><small>Monthly Attendance</small></th>
+									</tr>
+								  </thead>
+								  <tbody>
+									<tr ng-repeat="user in newArray">
+									  <td>
+										 <strong>{{user.Name}}</strong><br>
+										 <span class="salesHead"><small>More</small></span>
+									  </td>
+									  <td>{{user.total | currency}}</td>
+									  <td>{{user.MonthlyAttendance}}</td>
+									</tr>
+								  </tbody>
+							</table>
+						</div>
+					</div>
+					</div>
+				</div>
+		</div>
+	</div>
+
+</body>
+</html>
